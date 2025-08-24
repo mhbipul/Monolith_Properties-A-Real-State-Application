@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 6,
     },
+    avatar : {
+        type : String,
+        default : "https://avatar.iran.liara.run/public/20"
+    },
 
 },{timestamps: true});
 

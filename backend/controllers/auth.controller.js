@@ -60,3 +60,58 @@ export const singin = async (req, res, next) => {
         next(error)
     }
 }
+
+export const googleAuth = async (req, res, next) => {
+    try {
+        const { name, email, photo } = req.body;
+        // Check if user already exists
+        const user = await User.findOne({email})
+        if(user){
+            //create a token
+            const token = jwt.sign({id:user._id},
+                process.env.JWT_SECRET, {expiresIn: "1d"}
+            )
+            //remove password from user object before sending response
+            const {password:pwd,...rest} = user._doc;
+            //cookie
+
+            res.cookie("access_token",token,{
+                httpOnly: true,
+                expires : new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day
+                sameSite: "strict",
+            }).status(200).json(rest); // sending user data without password
+        }
+        else{
+            //generates password 
+            const generatedPasswrod = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+            //creating hash of password
+            const  hashedPassword = bcrypt.hashSync(generatedPasswrod,10);
+            //creating new user
+            const newUser = new User({
+                username: name.split("").join("").toLowerCase()+Math.random().toString(36).slice(-4), // generating a random username
+                email,
+                password : hashedPassword,
+                avatar : photo
+            })
+
+            //saving the user to the database
+            await newUser.save();
+            const token = jwt.sign({id:user._id},
+                process.env.JWT_SECRET, {expiresIn: "1d"}
+            )
+            //remove password from user object before sending response
+            const {password:pwd,...rest} = user._doc;
+            //cookie
+
+            res.cookie("access_token",token,{
+                httpOnly: true,
+                sameSite: "strict",
+            }).status(200).json(rest); // sending user data without password
+
+        }
+        
+    } catch (error) {
+        next(error)
+        
+    }   
+}
