@@ -2,6 +2,7 @@ import express from "express"
 import { connectDB } from "./lib/db.js";
 import userRoutes from "./routes/user.route.js"; // Import user routes
 import authRoutes from "./routes/auth.route.js"; // Import auth routes
+import uploadRoutes from "./routes/upload.route.js"; // Import upload routes
 import dotenv from "dotenv";
 dotenv.config(); 
 
@@ -11,12 +12,15 @@ const app = express();
 app.use(express.json()); // Middleware to parse JSON bodies
 const PORT = process.env.PORT || 3000;
 app.use(express.json()); // Middleware to parse JSON bodies 
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 
 
 // Import routes
 app.use("/api/users",userRoutes)
 app.use("/api/auth", authRoutes); 
+app.use("/api/upload", uploadRoutes);
 
 
 
