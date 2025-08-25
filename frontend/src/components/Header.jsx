@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FaSearch } from 'react-icons/fa'
 import {useSelector} from "react-redux"
+// import { URLSearchParams } from 'url';
 
 const Header = () => {
   const { currentUser } = useSelector((state) => state.user);
