@@ -50,18 +50,3 @@ export const deleteUser = async (req, res, next) => {
   }
 };
 
-export const getUserListings = async (req, res, next) => {
-  try {
-    const userId = req.params.id;
-    
-    // You'll need to import your Listing model here
-    // const listings = await Listing.find({ userRef: userId });
-    
-    // For now, returning empty array - replace with actual listing logic
-    const listings = [];
-    
-    res.status(200).json(listings);
-  } catch (error) {
-    next(error);
-  }
-};
